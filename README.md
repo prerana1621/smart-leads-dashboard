@@ -1,5 +1,13 @@
 # Smart Leads Dashboard
 
+## Live Demo
+
+Frontend:
+[View Live Application](https://smart-leads-dashboard-olive.vercel.app/)
+
+Backend API:
+[https://smart-leads-api-x4jq.onrender.com](https://smart-leads-api-x4jq.onrender.com)
+
 A full-stack Lead Management Dashboard built using the MERN stack with TypeScript, JWT authentication, advanced filtering, pagination, CSV export, Docker support, and dark mode.
 
 ---
