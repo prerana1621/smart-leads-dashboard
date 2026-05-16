@@ -1,3 +1,7 @@
+import api from "../api/axios";
+
+import toast from "react-hot-toast";
+
 interface Lead {
   _id: string;
 
@@ -13,9 +17,29 @@ interface Lead {
 interface Props {
   leads: Lead[];
   darkMode: boolean;
+  fetchLeads: () => void;
 }
 
-function LeadsTable({ leads, darkMode }: Props) {
+function LeadsTable({ leads, darkMode, fetchLeads }: Props) {
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  const handleDelete = async (id: string) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      await api.delete(`/leads/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      toast.success("Lead deleted");
+
+      fetchLeads();
+    } catch (error) {
+      toast.error("Delete failed");
+    }
+  };
   if (leads.length === 0) {
     return (
       <div
@@ -66,6 +90,7 @@ function LeadsTable({ leads, darkMode }: Props) {
             <th className="p-4">Status</th>
 
             <th className="p-4">Source</th>
+            {user?.role === "admin" && <th className="p-4">Actions</th>}
           </tr>
         </thead>
 
@@ -101,6 +126,24 @@ function LeadsTable({ leads, darkMode }: Props) {
               </td>
 
               <td className="p-4">{lead.source}</td>
+              {user?.role === "admin" && (
+                <td className="p-4">
+                  <button
+                    onClick={() => handleDelete(lead._id)}
+                    className="
+        bg-red-600
+        hover:bg-red-500
+        text-white
+        px-3
+        py-1
+        rounded-md
+        transition
+      "
+                  >
+                    Delete
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

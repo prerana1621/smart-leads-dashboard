@@ -231,7 +231,7 @@ function DashboardPage() {
             Loading leads...
           </div>
         ) : (
-          <LeadsTable leads={leads} darkMode={darkMode} />
+          <LeadsTable leads={leads} darkMode={darkMode} fetchLeads={fetchLeads} />
         )}
         <div
           className="
