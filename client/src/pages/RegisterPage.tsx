@@ -6,18 +6,21 @@ import toast from "react-hot-toast";
 
 import { Link, useNavigate } from "react-router-dom";
 
-function LoginPage() {
+function RegisterPage() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
+
+  const [name, setName] = useState("");
 
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
+
+    if (!name || !email || !password) {
       toast.error("All fields are required");
 
       return;
@@ -36,23 +39,26 @@ function LoginPage() {
 
       return;
     }
+
     try {
       setLoading(true);
 
-      const response = await api.post("/auth/login", {
+        await api.post("/auth/register", {
+          name,
         email,
         password,
       });
 
-      localStorage.setItem("token", response.data.token);
+      toast.success("Registration successful");
 
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      navigate("/");
+    } catch (error: any) {
 
-      toast.success("Login successful");
+        console.log(error.response?.data);
       
-      navigate("/dashboard");
-    } catch (error) {
-      toast.error("Invalid email or password");
+        toast.error(
+          error.response?.data?.message || "Registration failed"
+        );
     } finally {
       setLoading(false);
     }
@@ -86,10 +92,23 @@ function LoginPage() {
           text-center
         "
         >
-          Login
+          Register
         </h2>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleRegister} className="space-y-4">
+          <input
+            type="text"
+            placeholder="Enter name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            className="
+    w-full
+    border
+    p-3
+    rounded-md
+  "
+          />
           <input
             type="email"
             placeholder="Enter email"
@@ -129,13 +148,14 @@ function LoginPage() {
               rounded-md
             "
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
+
         <p className="mt-4 text-center">
-          Don't have an account?{" "}
-          <Link to="/register" className="text-blue-600">
-            Register
+          Already have an account?{" "}
+          <Link to="/" className="text-blue-600">
+            Login
           </Link>
         </p>
       </div>
@@ -143,4 +163,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default RegisterPage;
