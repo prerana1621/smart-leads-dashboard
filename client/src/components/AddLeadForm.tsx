@@ -9,7 +9,7 @@ interface Props {
   darkMode: boolean;
 }
 
-function AddLeadForm({ darkMode }: Props) {
+function AddLeadForm({ fetchLeads,darkMode }: Props) {
   const [name, setName] = useState("");
 
   const [email, setEmail] = useState("");
@@ -59,6 +59,7 @@ function AddLeadForm({ darkMode }: Props) {
       setSource("Website");
 
       toast.success("Lead added successfully");
+      fetchLeads();
     } catch (error) {
       toast.error("Failed to add lead");
     } finally {
